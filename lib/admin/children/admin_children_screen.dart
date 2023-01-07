@@ -55,18 +55,18 @@ class _AdminChildrenScreenState extends State<AdminChildrenScreen> {
   var imageLink = '';
 
   Future<List<Children>> getAllChildrenItem() async {
-    List<Children> allChildrenItemList = [];
+    List<Children> allClassroomItemList = [];
 
     try {
       var res = await http.post(Uri.parse(API.getAllChildren));
 
       if (res.statusCode == 200) {
-        var responseBodyOfAllChildren = jsonDecode(res.body);
-        if (responseBodyOfAllChildren["success"] == true) {
+        var responseOfAllClassroom = jsonDecode(res.body);
+        if (responseOfAllClassroom["success"] == true) {
           print('Asaxszx success');
-          (responseBodyOfAllChildren["childrenData"] as List)
+          (responseOfAllClassroom["childrenData"] as List)
               .forEach((eachRecord) {
-            allChildrenItemList.add(Children.fromJson(eachRecord));
+            allClassroomItemList.add(Children.fromJson(eachRecord));
           });
         } else {
           print('asdzsczsdasdasdzd fail');
@@ -79,8 +79,8 @@ class _AdminChildrenScreenState extends State<AdminChildrenScreen> {
       print("Error:: " + errorMsg.toString());
     }
     print('aasssdfdsfdsdcdcccc');
-    print(allChildrenItemList);
-    return allChildrenItemList;
+    print(allClassroomItemList);
+    return allClassroomItemList;
   }
 
   deleteChildrenItem(int children_id) async {
@@ -409,7 +409,34 @@ class _AdminChildrenScreenState extends State<AdminChildrenScreen> {
     }
   }
 
-  //uploadItemFormScreen methods ends here
+  Future<List<Classroom>> getAllClassroomItem() async {
+    List<Classroom> allClassroomItemList = [];
+
+    try {
+      var res = await http.post(Uri.parse(API.getAllClassroom));
+
+      if (res.statusCode == 200) {
+        var responseOfAllClassroom = jsonDecode(res.body);
+        if (responseOfAllClassroom["success"] == true) {
+          print('Asaxszx success');
+          (responseOfAllClassroom["classroomData"] as List)
+              .forEach((eachRecord) {
+            allClassroomItemList.add(Classroom.fromJson(eachRecord));
+          });
+        } else {
+          print('asdzsczsdasdasdzd fail');
+        }
+      } else {
+        print('Error, status code is not 200');
+        Fluttertoast.showToast(msg: "Error, status code is not 200");
+      }
+    } catch (errorMsg) {
+      print("Error:: " + errorMsg.toString());
+    }
+    print('aasssdfdsfdsdcdcccc');
+    print(allClassroomItemList);
+    return allClassroomItemList;
+  }
 
   Widget uploadItemFromScreen() {
     return Scaffold(
@@ -588,43 +615,54 @@ class _AdminChildrenScreenState extends State<AdminChildrenScreen> {
                             filled: true,
                           ),
                         ),
-                        DropDownTextField(
-                          // initialValue: "name4",
-                          controller: _cnt,
-                          clearOption: true,
-                          enableSearch: true,
-                          clearIconProperty: IconProperty(color: Colors.green),
-                          searchDecoration:
-                              const InputDecoration(hintText: "Choice Parent"),
-                          validator: (value) {
-                            if (value == null) {
-                              return "Required field";
-                            } else {
-                              return null;
-                            }
-                          },
-                          dropDownItemCount: 6,
+                        FutureBuilder(
+                            future: getAllClassroomItem(),
+                            builder: (context,
+                                AsyncSnapshot<List<Classroom>> dataSnapShot) {
+                              if (dataSnapShot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              if (dataSnapShot.data == null) {
+                                return const Center(
+                                  child: Text(
+                                    "No Trending item found",
+                                  ),
+                                );
+                              }
+                              if (dataSnapShot.data!.length > 0) {
+                                return DropDownTextField(
+                                  // initialValue: "name4",
+                                  controller: _cnt,
+                                  clearOption: true,
+                                  enableSearch: true,
+                                  clearIconProperty:
+                                      IconProperty(color: Colors.green),
+                                  searchDecoration: const InputDecoration(
+                                      hintText: "Choice Parent"),
+                                  validator: (value) {
+                                    if (value == null) {
+                                      return "Required field";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  dropDownItemCount: dataSnapShot.data!.length,
 
-                          dropDownList: const [
-                            DropDownValueModel(name: 'name1', value: "value1"),
-                            DropDownValueModel(
-                                name: 'name2',
-                                value: "value2",
-                                toolTipMsg:
-                                    "DropDownButton is a widget that we can use to select one unique value from a set of values"),
-                            DropDownValueModel(name: 'name3', value: "value3"),
-                            DropDownValueModel(
-                                name: 'name4',
-                                value: "value4",
-                                toolTipMsg:
-                                    "DropDownButton is a widget that we can use to select one unique value from a set of values"),
-                            DropDownValueModel(name: 'name5', value: "value5"),
-                            DropDownValueModel(name: 'name6', value: "value6"),
-                            DropDownValueModel(name: 'name7', value: "value7"),
-                            DropDownValueModel(name: 'name8', value: "value8"),
-                          ],
-                          onChanged: (val) {},
-                        ),
+                                  dropDownList: const [
+                                    DropDownValueModel(
+                                        name: dataSnapShot., value: "value1"),
+                                  ],
+                                  onChanged: (val) {},
+                                );
+                              } else {
+                                return const Center(
+                                  child: Text("Empty, No Data."),
+                                );
+                              }
+                            }),
                         const SizedBox(
                           height: 18,
                         ),
