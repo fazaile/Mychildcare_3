@@ -44,9 +44,9 @@ dependencies:
   image_picker: ^0.8.6
   flutter_clean_calendar: ^1.1.0
   dropdown_textfield: ^1.0.7
-  dropdownfield: ^1.0.3
   pattern_formatter: ^2.0.0
   date_time_picker: ^2.1.0
+  
   
 
 dev_dependencies:

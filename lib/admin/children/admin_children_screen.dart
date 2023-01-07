@@ -6,6 +6,7 @@ import 'package:Mychildcare/admin/admin_main_menu_screen.dart';
 import 'package:Mychildcare/api_collection/api_connection.dart';
 import 'package:Mychildcare/users/model/children.dart';
 import 'package:Mychildcare/users/model/classroom.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -27,10 +28,24 @@ class AdminChildrenScreen extends StatefulWidget {
 class _AdminChildrenScreenState extends State<AdminChildrenScreen> {
   final ImagePicker _picker = ImagePicker();
   XFile? pickedImageXFile;
-
+  late SingleValueDropDownController _cnt;
   var formKey = GlobalKey<FormState>();
   var nameController = TextEditingController();
   var ageController = TextEditingController();
+
+  void initState() {
+    _cnt = SingleValueDropDownController();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _cnt.dispose();
+
+    super.dispose();
+  }
+
   //  var ratingController = TextEditingController();
   // var priceController = TextEditingController();
   // var tagsController = TextEditingController();
@@ -573,7 +588,83 @@ class _AdminChildrenScreenState extends State<AdminChildrenScreen> {
                             filled: true,
                           ),
                         ),
+                        DropDownTextField(
+                          // initialValue: "name4",
+                          controller: _cnt,
+                          clearOption: true,
+                          enableSearch: true,
+                          clearIconProperty: IconProperty(color: Colors.green),
+                          searchDecoration:
+                              const InputDecoration(hintText: "Choice Parent"),
+                          validator: (value) {
+                            if (value == null) {
+                              return "Required field";
+                            } else {
+                              return null;
+                            }
+                          },
+                          dropDownItemCount: 6,
 
+                          dropDownList: const [
+                            DropDownValueModel(name: 'name1', value: "value1"),
+                            DropDownValueModel(
+                                name: 'name2',
+                                value: "value2",
+                                toolTipMsg:
+                                    "DropDownButton is a widget that we can use to select one unique value from a set of values"),
+                            DropDownValueModel(name: 'name3', value: "value3"),
+                            DropDownValueModel(
+                                name: 'name4',
+                                value: "value4",
+                                toolTipMsg:
+                                    "DropDownButton is a widget that we can use to select one unique value from a set of values"),
+                            DropDownValueModel(name: 'name5', value: "value5"),
+                            DropDownValueModel(name: 'name6', value: "value6"),
+                            DropDownValueModel(name: 'name7', value: "value7"),
+                            DropDownValueModel(name: 'name8', value: "value8"),
+                          ],
+                          onChanged: (val) {},
+                        ),
+                        const SizedBox(
+                          height: 18,
+                        ),
+                        DropDownTextField(
+                          // initialValue: "name4",
+                          controller: _cnt,
+                          clearOption: true,
+                          enableSearch: true,
+                          clearIconProperty: IconProperty(color: Colors.green),
+                          searchDecoration:
+                              const InputDecoration(hintText: "Choice Parent"),
+                          validator: (value) {
+                            if (value == null) {
+                              return "Required field";
+                            } else {
+                              return null;
+                            }
+                          },
+                          dropDownItemCount: 6,
+
+                          dropDownList: const [
+                            DropDownValueModel(name: 'name1', value: "value1"),
+                            DropDownValueModel(
+                                name: 'name2',
+                                value: "value2",
+                                toolTipMsg:
+                                    "DropDownButton is a widget that we can use to select one unique value from a set of values"),
+                            DropDownValueModel(name: 'name3', value: "value3"),
+                            DropDownValueModel(
+                                name: 'name4',
+                                value: "value4",
+                                toolTipMsg:
+                                    "DropDownButton is a widget that we can use to select one unique value from a set of values"),
+                            DropDownValueModel(name: 'name5', value: "value5"),
+                            DropDownValueModel(name: 'name6', value: "value6"),
+                            DropDownValueModel(name: 'name7', value: "value7"),
+                            DropDownValueModel(name: 'name8', value: "value8"),
+                          ],
+                          onChanged: (val) {},
+                        ),
                         const SizedBox(
                           height: 18,
                         ),
