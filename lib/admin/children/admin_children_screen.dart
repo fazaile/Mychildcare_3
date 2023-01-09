@@ -17,6 +17,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 
 import 'package:Mychildcare/admin/admin_login_screen.dart';
+import '../widget/dropdown_widget.dart';
 
 class AdminChildrenScreen extends StatefulWidget {
   const AdminChildrenScreen({super.key});
@@ -55,18 +56,17 @@ class _AdminChildrenScreenState extends State<AdminChildrenScreen> {
   var imageLink = '';
 
   Future<List<Children>> getAllChildrenItem() async {
-    List<Children> allClassroomItemList = [];
+    List<Children> allChildrenItemList = [];
 
     try {
       var res = await http.post(Uri.parse(API.getAllChildren));
 
       if (res.statusCode == 200) {
-        var responseOfAllClassroom = jsonDecode(res.body);
-        if (responseOfAllClassroom["success"] == true) {
+        var responseOfAllChildren = jsonDecode(res.body);
+        if (responseOfAllChildren["success"] == true) {
           print('Asaxszx success');
-          (responseOfAllClassroom["childrenData"] as List)
-              .forEach((eachRecord) {
-            allClassroomItemList.add(Children.fromJson(eachRecord));
+          (responseOfAllChildren["childrenData"] as List).forEach((eachRecord) {
+            allChildrenItemList.add(Children.fromJson(eachRecord));
           });
         } else {
           print('asdzsczsdasdasdzd fail');
@@ -79,8 +79,8 @@ class _AdminChildrenScreenState extends State<AdminChildrenScreen> {
       print("Error:: " + errorMsg.toString());
     }
     print('aasssdfdsfdsdcdcccc');
-    print(allClassroomItemList);
-    return allClassroomItemList;
+    print(allChildrenItemList);
+    return allChildrenItemList;
   }
 
   deleteChildrenItem(int children_id) async {
@@ -410,18 +410,18 @@ class _AdminChildrenScreenState extends State<AdminChildrenScreen> {
   }
 
   Future<List<Classroom>> getAllClassroomItem() async {
-    List<Classroom> allClassroomItemList = [];
+    List<Classroom> allChildrenItemList = [];
 
     try {
       var res = await http.post(Uri.parse(API.getAllClassroom));
 
       if (res.statusCode == 200) {
-        var responseOfAllClassroom = jsonDecode(res.body);
-        if (responseOfAllClassroom["success"] == true) {
+        var responseOfAllChildren = jsonDecode(res.body);
+        if (responseOfAllChildren["success"] == true) {
           print('Asaxszx success');
-          (responseOfAllClassroom["classroomData"] as List)
+          (responseOfAllChildren["classroomData"] as List)
               .forEach((eachRecord) {
-            allClassroomItemList.add(Classroom.fromJson(eachRecord));
+            allChildrenItemList.add(Classroom.fromJson(eachRecord));
           });
         } else {
           print('asdzsczsdasdasdzd fail');
@@ -434,8 +434,8 @@ class _AdminChildrenScreenState extends State<AdminChildrenScreen> {
       print("Error:: " + errorMsg.toString());
     }
     print('aasssdfdsfdsdcdcccc');
-    print(allClassroomItemList);
-    return allClassroomItemList;
+    print(allChildrenItemList);
+    return allChildrenItemList;
   }
 
   Widget uploadItemFromScreen() {
@@ -473,7 +473,7 @@ class _AdminChildrenScreenState extends State<AdminChildrenScreen> {
               onPressed: () {
                 Fluttertoast.showToast(msg: "Uploading now...");
 
-                defaultScreen(context);
+                Get.to(defaultScreen(context));
               },
               child: const Text(
                 'Done',
@@ -615,94 +615,50 @@ class _AdminChildrenScreenState extends State<AdminChildrenScreen> {
                             filled: true,
                           ),
                         ),
-                        FutureBuilder(
-                            future: getAllClassroomItem(),
-                            builder: (context,
-                                AsyncSnapshot<List<Classroom>> dataSnapShot) {
-                              if (dataSnapShot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                              if (dataSnapShot.data == null) {
-                                return const Center(
-                                  child: Text(
-                                    "No Trending item found",
-                                  ),
-                                );
-                              }
-                              if (dataSnapShot.data!.length > 0) {
-                                return DropDownTextField(
-                                  // initialValue: "name4",
-                                  controller: _cnt,
-                                  clearOption: true,
-                                  enableSearch: true,
-                                  clearIconProperty:
-                                      IconProperty(color: Colors.green),
-                                  searchDecoration: const InputDecoration(
-                                      hintText: "Choice Parent"),
-                                  validator: (value) {
-                                    if (value == null) {
-                                      return "Required field";
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                  dropDownItemCount: dataSnapShot.data!.length,
 
-                                  dropDownList: const [
-                                    DropDownValueModel(
-                                        name: dataSnapShot., value: "value1"),
-                                  ],
-                                  onChanged: (val) {},
-                                );
-                              } else {
-                                return const Center(
-                                  child: Text("Empty, No Data."),
-                                );
-                              }
-                            }),
                         const SizedBox(
                           height: 18,
                         ),
-                        DropDownTextField(
-                          // initialValue: "name4",
-                          controller: _cnt,
-                          clearOption: true,
-                          enableSearch: true,
-                          clearIconProperty: IconProperty(color: Colors.green),
-                          searchDecoration:
-                              const InputDecoration(hintText: "Choice Parent"),
-                          validator: (value) {
-                            if (value == null) {
-                              return "Required field";
-                            } else {
-                              return null;
-                            }
-                          },
-                          dropDownItemCount: 6,
 
-                          dropDownList: const [
-                            DropDownValueModel(name: 'name1', value: "value1"),
-                            DropDownValueModel(
-                                name: 'name2',
-                                value: "value2",
-                                toolTipMsg:
-                                    "DropDownButton is a widget that we can use to select one unique value from a set of values"),
-                            DropDownValueModel(name: 'name3', value: "value3"),
-                            DropDownValueModel(
-                                name: 'name4',
-                                value: "value4",
-                                toolTipMsg:
-                                    "DropDownButton is a widget that we can use to select one unique value from a set of values"),
-                            DropDownValueModel(name: 'name5', value: "value5"),
-                            DropDownValueModel(name: 'name6', value: "value6"),
-                            DropDownValueModel(name: 'name7', value: "value7"),
-                            DropDownValueModel(name: 'name8', value: "value8"),
-                          ],
-                          onChanged: (val) {},
-                        ),
+                        // DropdownWidget(),
+
+                        // DropDownTextField(
+                        //   // initialValue: "name4",
+                        //   controller: _cnt,
+                        //   clearOption: true,
+                        //   enableSearch: true,
+                        //   clearIconProperty: IconProperty(color: Colors.green),
+                        //   searchDecoration:
+                        //       const InputDecoration(hintText: "Choice Parent"),
+                        //   validator: (value) {
+                        //     if (value == null) {
+                        //       return "Required field";
+                        //     } else {
+                        //       return null;
+                        //     }
+                        //   },
+                        //   dropDownItemCount: 6,
+
+                        //   dropDownList: const [
+                        //     DropDownValueModel(name: 'name1', value: "value1"),
+                        //     DropDownValueModel(
+                        //         name: 'name2',
+                        //         value: "value2",
+                        //         toolTipMsg:
+                        //             "DropDownButton is a widget that we can use to select one unique value from a set of values"),
+                        //     DropDownValueModel(name: 'name3', value: "value3"),
+                        //     DropDownValueModel(
+                        //         name: 'name4',
+                        //         value: "value4",
+                        //         toolTipMsg:
+                        //             "DropDownButton is a widget that we can use to select one unique value from a set of values"),
+                        //     DropDownValueModel(name: 'name5', value: "value5"),
+                        //     DropDownValueModel(name: 'name6', value: "value6"),
+                        //     DropDownValueModel(name: 'name7', value: "value7"),
+                        //     DropDownValueModel(name: 'name8', value: "value8"),
+                        //   ],
+                        //   onChanged: (val) {},
+                        // ),
                         const SizedBox(
                           height: 18,
                         ),

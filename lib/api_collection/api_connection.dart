@@ -7,6 +7,7 @@ class API {
 
   static const hostUploadChildren = '$hostConnect/children';
   static const hostUploadClassroom = '$hostConnect/classroom';
+  static const hostUploadMenu = '$hostConnect/menu';
 
   //signUp-login user
   static const signUp = '$hostConnectUser/signup.php';
@@ -34,7 +35,12 @@ class API {
 
   //Classroom
   static const getAllClassroom = '$hostUploadClassroom/all_classroom.php';
+  static const deleteClassroom = '$hostUploadClassroom/delete_classroom.php';
+  static const uploadClassroom = '$hostUploadClassroom/upload_classroom.php';
 
   //activity
   static const uploadNewActivity = '$hostUploadClassroom/upload_activity.php';
+
+  //Food Menu
+  static const uploadNewMenu = '$hostUploadMenu/upload_menu.php';
 }

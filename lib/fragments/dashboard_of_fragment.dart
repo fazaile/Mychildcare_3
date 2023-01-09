@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../users/userPreferences/current_user.dart';
 import '../fragments/home_fragment_screen.dart';
 import '../fragments/profile_fragment_screen.dart';
-import '../fragments/attendance_fragment_screen.dart';
+import 'stripe_fragment_screen.dart';
 import '../fragments/menu_food_fragment_screen.dart';
 
 class DashBoardOfFragment extends StatelessWidget {
@@ -14,7 +14,7 @@ class DashBoardOfFragment extends StatelessWidget {
   List<Widget> _fragmentScreens = [
     HomeFragmentScreen(),
     MenuFragmentScreen(),
-    AttendanceFragmentScreen(),
+    StripeFragmentScreen(),
     ProfileFragmentScreen(),
   ];
 

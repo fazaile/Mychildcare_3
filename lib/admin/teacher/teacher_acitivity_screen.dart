@@ -1,11 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:Mychildcare/admin/children/admin_edit_item_screen.dart';
-import 'package:Mychildcare/admin/admin_main_menu_screen.dart';
-import 'package:Mychildcare/api_collection/api_connection.dart';
-import 'package:Mychildcare/users/model/children.dart';
-import 'package:Mychildcare/users/model/classroom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -16,6 +11,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 
 import 'package:Mychildcare/admin/admin_login_screen.dart';
+import 'package:Mychildcare/admin/children/admin_edit_item_screen.dart';
+import 'package:Mychildcare/admin/admin_main_menu_screen.dart';
+import 'package:Mychildcare/api_collection/api_connection.dart';
+import 'package:Mychildcare/users/model/children.dart';
+import 'package:Mychildcare/users/model/classroom.dart';
 
 class TeacherActivityScreen extends StatefulWidget {
   const TeacherActivityScreen({super.key});
@@ -26,7 +26,7 @@ class TeacherActivityScreen extends StatefulWidget {
 
 class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
   final ImagePicker _picker = ImagePicker();
-  XFile? pickedImageXFile;
+  XFile? pickedImagedFileX;
 
   var formKey = GlobalKey<FormState>();
   var descriptionController = TextEditingController();
@@ -41,18 +41,18 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
 
   //defaultScreen methods
   captureImageWithPhoneCamera() async {
-    pickedImageXFile = await _picker.pickImage(source: ImageSource.camera);
+    pickedImagedFileX = await _picker.pickImage(source: ImageSource.camera);
     Get.back();
     setState(() {
-      pickedImageXFile;
+      pickedImagedFileX;
     });
   }
 
   pickImageFromPhoneGallery() async {
-    pickedImageXFile = await _picker.pickImage(source: ImageSource.gallery);
+    pickedImagedFileX = await _picker.pickImage(source: ImageSource.gallery);
     Get.back();
     setState(() {
-      pickedImageXFile;
+      pickedImagedFileX;
     });
   }
 
@@ -186,8 +186,8 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
     requestImgurApi.headers['Authorization'] = "Client-ID " + "55eaa7530afc3ed";
 
     var imageFile = await http.MultipartFile.fromPath(
-      'activity_image',
-      pickedImageXFile!.path,
+      'image',
+      pickedImagedFileX!.path,
       filename: imageName,
     );
 
@@ -215,10 +215,10 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
       var response = await http.post(Uri.parse(API.uploadNewActivity), body: {
         'activity_id': '1',
         //drop down box sini
-        'activity_description': descriptionController.text.trim().toString(),
-        'activity_date': dateController.text.trim().toString(),
-        'activity_start': startController.text.trim().toString(),
-        'activity_end': endController.text.trim().toString(),
+        'activity_description': descriptionController.text,
+        'activity_date': dateController.text,
+        'activity_start': startController.text,
+        'activity_end': endController.text,
         'activity_image	': imageLink.toString()
       });
       if (response.statusCode == 200) {
@@ -227,7 +227,7 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
           Fluttertoast.showToast(msg: "New item uploaded successfully");
 
           setState(() {
-            pickedImageXFile = null;
+            pickedImagedFileX = null;
             descriptionController.clear();
             dateController.clear();
             startController.clear();
@@ -265,7 +265,7 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
         leading: IconButton(
           onPressed: () {
             setState(() {
-              pickedImageXFile = null;
+              pickedImagedFileX = null;
               descriptionController.clear();
               dateController.clear();
               startController.clear();
@@ -302,7 +302,7 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: FileImage(
-                File(pickedImageXFile!.path),
+                File(pickedImagedFileX!.path),
               ),
               fit: BoxFit.cover,
             ),
@@ -570,6 +570,6 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return pickedImageXFile == null ? defaultScreen() : uploadItemFromScreen();
+    return pickedImagedFileX == null ? defaultScreen() : uploadItemFromScreen();
   }
 }
