@@ -1,4 +1,4 @@
-class Classroom {
+class MenuFood {
   int? menu_id;
   int? classroom_id;
   String? menu_name;
@@ -6,7 +6,7 @@ class Classroom {
   String? menu_start_time;
   String? menu_end_time;
 
-  Classroom(
+  MenuFood(
       {this.menu_id,
       this.classroom_id,
       this.menu_name,
@@ -14,7 +14,7 @@ class Classroom {
       this.menu_start_time,
       this.menu_end_time});
 
-  factory Classroom.fromJson(Map<String, dynamic> json) => Classroom(
+  factory MenuFood.fromJson(Map<String, dynamic> json) => MenuFood(
         menu_id: int.parse(json['menu_id']),
         classroom_id: int.parse(json['classroom_id']),
         menu_name: json['menu_name'],

@@ -1,8 +1,11 @@
 import 'dart:convert';
 
+import 'package:Mychildcare/admin/teacher/menu_food_screen.dart';
+import 'package:Mychildcare/users/model/menu_food.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -37,6 +40,14 @@ class _MenuFoodAddScreenState extends State<MenuFoodAddScreen> {
         var resBodyOfUploadItem = jsonDecode(response.body);
         if (resBodyOfUploadItem['success'] = true) {
           Fluttertoast.showToast(msg: "New item uploaded successfully");
+          setState(() {
+            nameController.clear();
+            dateController.clear();
+            startController.clear();
+            endController.clear();
+            MenuFoodScreen();
+            Get.to(MenuFoodScreen());
+          });
         } else {
           Fluttertoast.showToast(msg: 'Item not uploaded.Error,Try again');
         }
@@ -116,7 +127,7 @@ class _MenuFoodAddScreenState extends State<MenuFoodAddScreen> {
                           val == "" ? "Please enter date" : null,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(
-                          Icons.title,
+                          Icons.date_range,
                           color: Colors.black,
                         ),
                         hintText: "Enter Date...",
@@ -151,6 +162,18 @@ class _MenuFoodAddScreenState extends State<MenuFoodAddScreen> {
                         fillColor: Colors.white,
                         filled: true,
                       ),
+                      onTap: () async {
+                        DateTime? date = DateTime(1900);
+                        FocusScope.of(context).requestFocus(new FocusNode());
+
+                        date = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime(2100));
+
+                        dateController.text = date!.toIso8601String();
+                      },
                     ),
 
                     const SizedBox(
@@ -159,13 +182,13 @@ class _MenuFoodAddScreenState extends State<MenuFoodAddScreen> {
                     TextFormField(
                       controller: startController,
                       validator: (val) =>
-                          val == "" ? "Please enter start" : null,
+                          val == "" ? "Please enter start time" : null,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(
-                          Icons.title,
+                          Icons.lock_clock_rounded,
                           color: Colors.black,
                         ),
-                        hintText: "Enter start...",
+                        hintText: "Enter start time...",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                           borderSide: const BorderSide(
@@ -197,6 +220,15 @@ class _MenuFoodAddScreenState extends State<MenuFoodAddScreen> {
                         fillColor: Colors.white,
                         filled: true,
                       ),
+                      onTap: () async {
+                        TimeOfDay? timeOfDay = TimeOfDay(hour: 8, minute: 30);
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                        timeOfDay = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
+                        startController.text = timeOfDay!.toString();
+                      },
                     ),
 
                     const SizedBox(
@@ -205,13 +237,13 @@ class _MenuFoodAddScreenState extends State<MenuFoodAddScreen> {
                     TextFormField(
                       controller: endController,
                       validator: (val) =>
-                          val == "" ? "Please enter end date" : null,
+                          val == "" ? "Please enter end time" : null,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(
-                          Icons.title,
+                          Icons.lock_clock_rounded,
                           color: Colors.black,
                         ),
-                        hintText: "Enter end date...",
+                        hintText: "Enter end time...",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                           borderSide: const BorderSide(
@@ -243,6 +275,15 @@ class _MenuFoodAddScreenState extends State<MenuFoodAddScreen> {
                         fillColor: Colors.white,
                         filled: true,
                       ),
+                      onTap: () async {
+                        TimeOfDay? timeOfDay = TimeOfDay(hour: 8, minute: 30);
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                        timeOfDay = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
+                        endController.text = timeOfDay!.toString();
+                      },
                     ),
 
                     const SizedBox(
@@ -253,6 +294,14 @@ class _MenuFoodAddScreenState extends State<MenuFoodAddScreen> {
                       child: Text("Add Menu"),
                       onPressed: () {
                         saveItemInfoToDatabase();
+                        setState(() {
+                          nameController.clear();
+                          dateController.clear();
+                          startController.clear();
+                          endController.clear();
+                          MenuFoodScreen();
+                          Get.to(MenuFoodScreen());
+                        });
                       },
                     ),
 

@@ -6,10 +6,21 @@ class StripeFragmentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
-        ElevatedButton(onPressed: () {}, child: Text('Make Fee Payment'))
-      ],
-    ));
+      body: Payment(),
+    );
+  }
+}
+
+class Payment extends StatefulWidget {
+  const Payment({super.key});
+
+  @override
+  State<Payment> createState() => _PaymentState();
+}
+
+class _PaymentState extends State<Payment> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

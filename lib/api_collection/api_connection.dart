@@ -40,7 +40,11 @@ class API {
 
   //activity
   static const uploadNewActivity = '$hostUploadClassroom/upload_activity.php';
+  static const getAllActivity = '$hostUploadClassroom/all_activity.php';
+  static const deleteActivity = '$hostUploadClassroom/delete_activity.php';
 
   //Food Menu
   static const uploadNewMenu = '$hostUploadMenu/upload_menu.php';
+  static const getAllMenu = '$hostUploadMenu/all_menu.php';
+  static const deleteMenu = '$hostUploadMenu/delete_menu.php';
 }

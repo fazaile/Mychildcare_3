@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:Mychildcare/users/model/activity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -109,73 +110,6 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
   }
   //default screen methods ends here
 
-  Widget defaultScreen() {
-    return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.black54,
-                Colors.deepPurple,
-              ],
-            ),
-          ),
-        ),
-        automaticallyImplyLeading: false,
-        title: const Text("Welcome Teacher"),
-        centerTitle: true,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.black54,
-              Colors.deepPurple,
-            ],
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.add_photo_alternate,
-                color: Colors.white54,
-                size: 200,
-              ),
-
-              //button
-              Material(
-                color: Colors.black38,
-                borderRadius: BorderRadius.circular(30),
-                child: InkWell(
-                  onTap: () {
-                    showDialogBoxForImagePickingAndCapturing();
-                  },
-                  borderRadius: BorderRadius.circular(30),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 28,
-                    ),
-                    child: Text(
-                      "Add New Item",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
 //uploadItemFormScreen methods
   uploadItemImage() async {
     var requestImgurApi = http.MultipartRequest(
@@ -212,6 +146,8 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
 
   saveItemInfoToDatabase() async {
     try {
+      print('akaskjsajkljasljaj sini');
+      print(imageLink);
       var response = await http.post(Uri.parse(API.uploadNewActivity), body: {
         'activity_id': '1',
         //drop down box sini
@@ -219,7 +155,7 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
         'activity_date': dateController.text,
         'activity_start': startController.text,
         'activity_end': endController.text,
-        'activity_image	': imageLink.toString()
+        'activity_image': imageLink.toString(),
       });
       if (response.statusCode == 200) {
         var resBodyOfUploadItem = jsonDecode(response.body);
@@ -244,11 +180,63 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
     }
   }
 
+  Future<List<Activity>> getAllActivity() async {
+    List<Activity> allActivityItemList = [];
+
+    try {
+      var res = await http.post(Uri.parse(API.getAllActivity));
+
+      if (res.statusCode == 200) {
+        var responseOfAllActivity = jsonDecode(res.body);
+        if (responseOfAllActivity["success"] == true) {
+          print('Asaxszx success');
+          (responseOfAllActivity["activityData"] as List).forEach((eachRecord) {
+            allActivityItemList.add(Activity.fromJson(eachRecord));
+          });
+        } else {
+          print('asdzsczsdasdasdzd fail');
+        }
+      } else {
+        print('Error, status code is not 200');
+        Fluttertoast.showToast(msg: "Error, status code is not 200");
+      }
+    } catch (errorMsg) {
+      print("Error:: " + errorMsg.toString());
+    }
+    print('aasssdfdsfdsdcdcccc');
+    print(allActivityItemList);
+    return allActivityItemList;
+  }
+
+  deleteActivity(int activity_id) async {
+    try {
+      var res = await http.post(Uri.parse(API.deleteActivity), body: {
+        "activity_id": activity_id.toString(),
+      });
+
+      if (res.statusCode == 200) {
+        var responseBodyFromDeleteCart = jsonDecode(res.body);
+
+        if (responseBodyFromDeleteCart["success"] == true) {
+          setState(() {
+            getAllActivity();
+          });
+        }
+      } else {
+        Fluttertoast.showToast(msg: "Error, Status Code is not 200");
+      }
+    } catch (errorMessage) {
+      print("Error: " + errorMessage.toString());
+
+      Fluttertoast.showToast(msg: "Error: " + errorMessage.toString());
+    }
+  }
+
   //uploadItemFormScreen methods ends here
 
   Widget uploadItemFromScreen() {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -314,7 +302,7 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Container(
             decoration: const BoxDecoration(
-              color: Colors.white24,
+              color: Colors.lightBlue,
               borderRadius: BorderRadius.all(
                 Radius.circular(60),
               ),
@@ -389,7 +377,7 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
                               val == "" ? "Please enter date" : null,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(
-                              Icons.title,
+                              Icons.calendar_month,
                               color: Colors.black,
                             ),
                             hintText: "Enter Date...",
@@ -424,6 +412,19 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
                             fillColor: Colors.white,
                             filled: true,
                           ),
+                          onTap: () async {
+                            DateTime? date = DateTime(1900);
+                            FocusScope.of(context)
+                                .requestFocus(new FocusNode());
+
+                            date = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(1900),
+                                lastDate: DateTime(2100));
+
+                            dateController.text = date!.toIso8601String();
+                          },
                         ),
 
                         const SizedBox(
@@ -435,10 +436,10 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
                               val == "" ? "Please enter start" : null,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(
-                              Icons.title,
+                              Icons.punch_clock_rounded,
                               color: Colors.black,
                             ),
-                            hintText: "Enter start...",
+                            hintText: "Enter start time...",
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
                               borderSide: const BorderSide(
@@ -470,6 +471,17 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
                             fillColor: Colors.white,
                             filled: true,
                           ),
+                          onTap: () async {
+                            TimeOfDay? timeOfDay =
+                                TimeOfDay(hour: 8, minute: 30);
+                            FocusScope.of(context)
+                                .requestFocus(new FocusNode());
+                            timeOfDay = await showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                            );
+                            startController.text = timeOfDay!.toString();
+                          },
                         ),
 
                         const SizedBox(
@@ -481,10 +493,10 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
                               val == "" ? "Please enter end" : null,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(
-                              Icons.title,
+                              Icons.punch_clock_rounded,
                               color: Colors.black,
                             ),
-                            hintText: "Enter end...",
+                            hintText: "Enter end time...",
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
                               borderSide: const BorderSide(
@@ -516,6 +528,17 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
                             fillColor: Colors.white,
                             filled: true,
                           ),
+                          onTap: () async {
+                            TimeOfDay? timeOfDay =
+                                TimeOfDay(hour: 8, minute: 30);
+                            FocusScope.of(context)
+                                .requestFocus(new FocusNode());
+                            timeOfDay = await showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                            );
+                            startController.text = timeOfDay!.toString();
+                          },
                         ),
 
                         const SizedBox(
@@ -571,5 +594,169 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
   @override
   Widget build(BuildContext context) {
     return pickedImagedFileX == null ? defaultScreen() : uploadItemFromScreen();
+  }
+
+  Widget defaultScreen() {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Classroom activity'),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              showDialogBoxForImagePickingAndCapturing();
+            },
+            icon: Icon(Icons.add),
+          ),
+        ],
+      ),
+      body: allItemWidget(context),
+    );
+  }
+
+  allItemWidget(context) {
+    return SingleChildScrollView(
+      child: FutureBuilder(
+          future: getAllActivity(),
+          builder: (context, AsyncSnapshot<List<Activity>> dataSnapShot) {
+            if (dataSnapShot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (dataSnapShot.data == null) {
+              return const Center(
+                child: Text(
+                  "No Trending item found",
+                ),
+              );
+            }
+            if (dataSnapShot.data!.length > 0) {
+              return ListView.builder(
+                itemCount: dataSnapShot.data!.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) {
+                  // List list = dataSnapShot.data!;
+                  Activity eachActivityItemRecord = dataSnapShot.data![index];
+
+                  return GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(
+                        16,
+                        index == 0 ? 16 : 8,
+                        16,
+                        index == dataSnapShot.data!.length - 1 ? 16 : 8,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.lightBlue,
+                        boxShadow: const [
+                          BoxShadow(
+                            offset: Offset(0, 0),
+                            blurRadius: 6,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          //name + price
+                          //tags
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  //name and price
+                                  Row(
+                                    children: [
+                                      //name
+                                      Expanded(
+                                        child: Text(
+                                          eachActivityItemRecord
+                                              .activity_description!,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 16,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: IconButton(
+                                          onPressed: () {
+                                            //soon
+                                          },
+                                          icon: Icon(Icons.edit),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          deleteActivity(eachActivityItemRecord
+                                              .activity_id!);
+                                        },
+                                        icon: Icon(Icons.delete),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              //ssasasasasa
+                            },
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                topRight: Radius.circular(20),
+                                bottomRight: Radius.circular(20),
+                              ),
+                              child: FadeInImage(
+                                height: 130,
+                                width: 130,
+                                fit: BoxFit.cover,
+                                placeholder: const AssetImage(
+                                    "images/place_holder_1.png"),
+                                image: NetworkImage(
+                                  eachActivityItemRecord.activity_image!,
+                                ),
+                                imageErrorBuilder:
+                                    (context, error, stackTraceError) {
+                                  return const Center(
+                                    child: Icon(
+                                      Icons.broken_image_outlined,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            } else {
+              return const Center(
+                child: Text("Empty, No Data."),
+              );
+            }
+          }),
+    );
   }
 }

@@ -1,12 +1,46 @@
+import 'dart:convert';
+
+import 'package:Mychildcare/users/model/activity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../users/userPreferences/current_user.dart';
+import 'package:Mychildcare/api_collection/api_connection.dart';
 
 class HomeFragmentScreen extends StatelessWidget {
   CurrentUser _rememberCurrentUser = Get.put(CurrentUser());
+
+  Future<List<Activity>> getAllFoodMenu() async {
+    List<Activity> allFoodMenuItemList = [];
+
+    try {
+      var res = await http.post(Uri.parse(API.getAllActivity));
+
+      if (res.statusCode == 200) {
+        var responseOfAllChildren = jsonDecode(res.body);
+        if (responseOfAllChildren["success"] == true) {
+          print('Asaxszx success');
+          (responseOfAllChildren["activityData"] as List).forEach((eachRecord) {
+            allFoodMenuItemList.add(Activity.fromJson(eachRecord));
+          });
+        } else {
+          print('asdzsczsdasdasdzd fail');
+        }
+      } else {
+        print('Error, status code is not 200');
+        Fluttertoast.showToast(msg: "Error, status code is not 200");
+      }
+    } catch (errorMsg) {
+      print("Error:: " + errorMsg.toString());
+    }
+    print('aasssdfdsfdsdcdcccc');
+    print(allFoodMenuItemList);
+    return allFoodMenuItemList;
+  }
 
   @override
   Widget build(BuildContext context) {
