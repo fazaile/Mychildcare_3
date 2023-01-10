@@ -14,18 +14,18 @@ import 'package:Mychildcare/api_collection/api_connection.dart';
 class HomeFragmentScreen extends StatelessWidget {
   CurrentUser _rememberCurrentUser = Get.put(CurrentUser());
 
-  Future<List<Activity>> getAllFoodMenu() async {
-    List<Activity> allFoodMenuItemList = [];
+  Future<List<Activity>> getAllActivity() async {
+    List<Activity> allActivityItemList = [];
 
     try {
       var res = await http.post(Uri.parse(API.getAllActivity));
 
       if (res.statusCode == 200) {
-        var responseOfAllChildren = jsonDecode(res.body);
-        if (responseOfAllChildren["success"] == true) {
+        var responseOfAllActivity = jsonDecode(res.body);
+        if (responseOfAllActivity["success"] == true) {
           print('Asaxszx success');
-          (responseOfAllChildren["activityData"] as List).forEach((eachRecord) {
-            allFoodMenuItemList.add(Activity.fromJson(eachRecord));
+          (responseOfAllActivity["activityData"] as List).forEach((eachRecord) {
+            allActivityItemList.add(Activity.fromJson(eachRecord));
           });
         } else {
           print('asdzsczsdasdasdzd fail');
@@ -38,8 +38,8 @@ class HomeFragmentScreen extends StatelessWidget {
       print("Error:: " + errorMsg.toString());
     }
     print('aasssdfdsfdsdcdcccc');
-    print(allFoodMenuItemList);
-    return allFoodMenuItemList;
+    print(allActivityItemList);
+    return allActivityItemList;
   }
 
   @override
@@ -51,59 +51,88 @@ class HomeFragmentScreen extends StatelessWidget {
       },
       builder: (controller) {
         return Scaffold(
-          body: ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              children: [
-                GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(
-                      5,
-                      6,
-                      1,
-                      6,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.grey,
-                      boxShadow: const [
-                        BoxShadow(
-                          offset: Offset(0, 0),
-                          blurRadius: 6,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        //name + price
-                        //tags
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                //name and price
-                                Column(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {},
-                                      child: ClipRRect(
-                                        borderRadius: const BorderRadius.only(
-                                          topRight: Radius.circular(20),
-                                          bottomRight: Radius.circular(20),
-                                        ),
+          body: allItemWidget(context),
+        );
+      },
+    );
+  }
+
+  allItemWidget(context) {
+    return SingleChildScrollView(
+      child: FutureBuilder(
+          future: getAllActivity(),
+          builder: (context, AsyncSnapshot<List<Activity>> dataSnapShot) {
+            if (dataSnapShot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (dataSnapShot.data == null) {
+              return const Center(
+                child: Text(
+                  "No Trending item found",
+                ),
+              );
+            }
+            if (dataSnapShot.data!.length > 0) {
+              return ListView.builder(
+                itemCount: dataSnapShot.data!.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) {
+                  // List list = dataSnapShot.data!;
+                  Activity eachActivityItemRecord = dataSnapShot.data![index];
+
+                  return GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(
+                        16,
+                        index == 0 ? 16 : 8,
+                        16,
+                        index == dataSnapShot.data!.length - 1 ? 16 : 8,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.lightBlue,
+                        boxShadow: const [
+                          BoxShadow(
+                            offset: Offset(0, 0),
+                            blurRadius: 6,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          //name + price
+                          //tags
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    children: [
+                                      ClipRRect(
+                                        clipBehavior: Clip.hardEdge,
+                                        borderRadius: BorderRadius.zero,
+                                        // borderRadius: const BorderRadius.only(
+                                        //   topRight: Radius.circular(20),
+                                        //   bottomRight: Radius.circular(20),
+                                        // ),
                                         child: FadeInImage(
-                                          height: 130,
-                                          width: 130,
-                                          fit: BoxFit.cover,
+                                          alignment: Alignment.center,
+                                          height: 250,
+                                          width: 300,
+                                          fit: BoxFit.fitWidth,
                                           placeholder: const AssetImage(
                                               "images/place_holder_1.png"),
                                           image: NetworkImage(
-                                            'images/place_holder_1.png',
+                                            eachActivityItemRecord
+                                                .activity_image!,
                                           ),
                                           imageErrorBuilder: (context, error,
                                               stackTraceError) {
@@ -115,55 +144,67 @@ class HomeFragmentScreen extends StatelessWidget {
                                           },
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    //name
-                                    Expanded(
-                                      child: Text(
-                                        'Description',
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
+                                    ],
+                                  ),
+                                  //name and price
+                                  Row(
+                                    children: [
+                                      //name
+                                      Expanded(
+                                        child: Text(
+                                          eachActivityItemRecord
+                                              .activity_description!,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 16,
-                                ),
-                                Row(
-                                  children: [Text('activity date')],
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                ),
-                                Row(
-                                  children: [
-                                    Text('Activity time start'),
-                                    SizedBox(
-                                      width: 30,
-                                    ),
-                                    Text('Activity time end'),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 16,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        eachActivityItemRecord.activity_date!,
+                                      )
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        eachActivityItemRecord.activity_start!,
+                                      )
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        eachActivityItemRecord.activity_end!,
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-
-                        //image clothes
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ),
-              ]),
-        );
-      },
+                  );
+                },
+              );
+            } else {
+              return const Center(
+                child: Text("Empty, No Data."),
+              );
+            }
+          }),
     );
   }
 }

@@ -692,6 +692,28 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
                                   const SizedBox(
                                     height: 16,
                                   ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        eachActivityItemRecord.activity_date!,
+                                      )
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        eachActivityItemRecord.activity_start!,
+                                      )
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        eachActivityItemRecord.activity_end!,
+                                      )
+                                    ],
+                                  ),
+
                                   Row(
                                     children: [
                                       Padding(
