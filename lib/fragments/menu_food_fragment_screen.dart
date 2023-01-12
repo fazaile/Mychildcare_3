@@ -1,96 +1,176 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_clean_calendar/flutter_clean_calendar.dart';
+import 'package:flutter/src/widgets/container.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:http/http.dart' as http;
+import 'package:Mychildcare/api_collection/api_connection.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class MenuFragmentScreen extends StatefulWidget {
-  @override
-  State<MenuFragmentScreen> createState() => _MenuFragmentScreenState();
-}
+import '../users/model/menu_food.dart';
 
-class _MenuFragmentScreenState extends State<MenuFragmentScreen> {
-  DateTime? selectedDay;
-  List<CleanCalendarEvent>? selectedEvent;
+class MenuFragmentScreen extends StatelessWidget {
+  Future<List<MenuFood>> getAllFoodMenu() async {
+    List<MenuFood> allFoodMenuItemList = [];
 
-  final Map<DateTime, List<CleanCalendarEvent>> events = {
-    DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day): [
-      CleanCalendarEvent('Event A',
-          startTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day, 10, 0),
-          endTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day, 12, 0),
-          description: 'A special event',
-          color: Colors.blue),
-    ],
-    DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day + 2):
-        [
-      CleanCalendarEvent('Event B',
-          startTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + 2, 10, 0),
-          endTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + 2, 12, 0),
-          color: Colors.orange),
-      CleanCalendarEvent('Event C',
-          startTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + 2, 14, 30),
-          endTime: DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day + 2, 17, 0),
-          color: Colors.pink),
-    ],
-  };
+    try {
+      var res = await http.post(Uri.parse(API.getAllMenu));
 
-  void _handleData(date) {
-    setState(() {
-      selectedDay = date;
-      selectedEvent = events[selectedDay] ?? [];
-    });
-    print(selectedDay);
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    selectedEvent = events[selectedDay] ?? [];
-    super.initState();
+      if (res.statusCode == 200) {
+        var responseOfAllChildren = jsonDecode(res.body);
+        if (responseOfAllChildren["success"] == true) {
+          print('Asaxszx success');
+          (responseOfAllChildren["menuData"] as List).forEach((eachRecord) {
+            allFoodMenuItemList.add(MenuFood.fromJson(eachRecord));
+          });
+        } else {
+          print('asdzsczsdasdasdzd fail');
+        }
+      } else {
+        print('Error, status code is not 200');
+        Fluttertoast.showToast(msg: "Error, status code is not 200");
+      }
+    } catch (errorMsg) {
+      print("Error:: " + errorMsg.toString());
+    }
+    print('aasssdfdsfdsdcdcccc');
+    print(allFoodMenuItemList);
+    return allFoodMenuItemList;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Calendar'),
-        centerTitle: true,
-      ),
-      body: SafeArea(
-        child: Container(
-          child: Calendar(
-            startOnMonday: true,
-            selectedColor: Colors.blue,
-            todayColor: Colors.red,
-            eventColor: Colors.green,
-            eventDoneColor: Colors.amber,
-            bottomBarColor: Colors.deepOrange,
-            onRangeSelected: (range) {
-              print('selected Day ${range.from},${range.to}');
-            },
-            onDateSelected: (date) {
-              return _handleData(date);
-            },
-            events: events,
-            isExpanded: true,
-            dayOfWeekStyle: TextStyle(
-              fontSize: 15,
-              color: Colors.black12,
-              fontWeight: FontWeight.w100,
-            ),
-            bottomBarTextStyle: TextStyle(
-              color: Colors.white,
-            ),
-            hideBottomBar: false,
-            hideArrows: false,
-            weekDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          ),
-        ),
-      ),
+      body: allItemWidget(context),
+    );
+  }
+
+  allItemWidget(context) {
+    return SingleChildScrollView(
+      child: FutureBuilder(
+          future: getAllFoodMenu(),
+          builder: (context, AsyncSnapshot<List<MenuFood>> dataSnapShot) {
+            if (dataSnapShot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (dataSnapShot.data == null) {
+              return const Center(
+                child: Text(
+                  "No Trending item found",
+                ),
+              );
+            }
+            if (dataSnapShot.data!.length > 0) {
+              return ListView.builder(
+                itemCount: dataSnapShot.data!.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) {
+                  // List list = dataSnapShot.data!;
+                  MenuFood eachFoodMenuItemRecord = dataSnapShot.data![index];
+
+                  return GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(
+                        16,
+                        index == 0 ? 16 : 8,
+                        16,
+                        index == dataSnapShot.data!.length - 1 ? 16 : 8,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.lightBlue,
+                        boxShadow: const [
+                          BoxShadow(
+                            offset: Offset(0, 0),
+                            blurRadius: 6,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          //name + price
+                          //tags
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  //name and price
+                                  Row(
+                                    children: [
+                                      //name
+                                      Expanded(
+                                        child: Text(
+                                          eachFoodMenuItemRecord.menu_name!,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 16,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "Date: " +
+                                            eachFoodMenuItemRecord.menu_date!,
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 16,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "Start time: " +
+                                            eachFoodMenuItemRecord
+                                                .menu_start_time!,
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 16,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "Start time: " +
+                                            eachFoodMenuItemRecord
+                                                .menu_end_time!,
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            } else {
+              return const Center(
+                child: Text("Empty, No Data."),
+              );
+            }
+          }),
     );
   }
 }

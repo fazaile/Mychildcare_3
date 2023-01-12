@@ -14,7 +14,7 @@ class DashBoardOfFragment extends StatelessWidget {
   List<Widget> _fragmentScreens = [
     HomeFragmentScreen(),
     MenuFragmentScreen(),
-    PaySampleApp(),
+    // PaySampleApp(),
     ProfileFragmentScreen(),
   ];
 

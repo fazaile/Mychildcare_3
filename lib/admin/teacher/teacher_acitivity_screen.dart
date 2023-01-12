@@ -151,7 +151,6 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
       print(imageLink);
       var response = await http.post(Uri.parse(API.uploadNewActivity), body: {
         'activity_id': '1',
-        //drop down box sini
         'activity_description': descriptionController.text,
         'activity_date': dateController.text,
         'activity_start': startController.text,
@@ -169,6 +168,7 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
             dateController.clear();
             startController.clear();
             endController.clear();
+            getAllActivity();
           });
         } else {
           Fluttertoast.showToast(msg: 'Item not uploaded.Error,Try again');
@@ -424,8 +424,9 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
                                 firstDate: DateTime(1900),
                                 lastDate: DateTime(2100));
 
-                            dateController.text =
-                                DateFormat('yyyy-MM-dd').format(date!);
+                            dateController.text = DateFormat('yyyy-MM-dd')
+                                .format(date!)
+                                .toString();
                           },
                         ),
 
@@ -484,7 +485,8 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
                             );
                             print(timeOfDay);
                             print(timeOfDay!.format(context));
-                            startController.text = timeOfDay.format(context);
+                            startController.text =
+                                timeOfDay.format(context).toString();
                           },
                         ),
 
@@ -541,7 +543,8 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
                               context: context,
                               initialTime: TimeOfDay.now(),
                             );
-                            endController.text = timeOfDay!.format(context);
+                            endController.text =
+                                timeOfDay!.format(context).toString();
                           },
                         ),
 
@@ -729,9 +732,7 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: IconButton(
-                                          onPressed: () {
-                                            //soon
-                                          },
+                                          onPressed: () {},
                                           icon: Icon(Icons.edit),
                                         ),
                                       ),

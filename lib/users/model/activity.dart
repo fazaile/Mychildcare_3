@@ -23,7 +23,7 @@ class Activity {
         activity_description: json['activity_description'],
         activity_date: json['activity_date'],
         activity_start: json['activity_start'],
-        activity_end: json['activity_start'],
+        activity_end: json['activity_end'],
         activity_image: json['activity_image'],
       );
 }
