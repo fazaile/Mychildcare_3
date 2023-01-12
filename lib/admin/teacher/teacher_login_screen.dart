@@ -260,15 +260,15 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text('Dont have and teacher account?'),
+                                  Text('Not a teacher please?'),
                                 ],
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Get.to(TeacherSignupScreen());
+                                  Get.to(LoginScreen());
                                 },
                                 child: const Text(
-                                  'Register Here',
+                                  'Click Here',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,

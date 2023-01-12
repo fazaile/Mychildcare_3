@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
+import 'package:intl/intl.dart';
 
 import 'package:Mychildcare/admin/admin_login_screen.dart';
 import 'package:Mychildcare/admin/children/admin_edit_item_screen.dart';
@@ -423,7 +424,8 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
                                 firstDate: DateTime(1900),
                                 lastDate: DateTime(2100));
 
-                            dateController.text = date!.toIso8601String();
+                            dateController.text =
+                                DateFormat('yyyy-MM-dd').format(date!);
                           },
                         ),
 
@@ -480,7 +482,9 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
                               context: context,
                               initialTime: TimeOfDay.now(),
                             );
-                            startController.text = timeOfDay!.toString();
+                            print(timeOfDay);
+                            print(timeOfDay!.format(context));
+                            startController.text = timeOfDay.format(context);
                           },
                         ),
 
@@ -537,7 +541,7 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
                               context: context,
                               initialTime: TimeOfDay.now(),
                             );
-                            startController.text = timeOfDay!.toString();
+                            endController.text = timeOfDay!.format(context);
                           },
                         ),
 
@@ -695,21 +699,27 @@ class _TeacherActivityScreenState extends State<TeacherActivityScreen> {
                                   Column(
                                     children: [
                                       Text(
-                                        eachActivityItemRecord.activity_date!,
+                                        "Date: " +
+                                            eachActivityItemRecord
+                                                .activity_date!,
                                       )
                                     ],
                                   ),
                                   Column(
                                     children: [
                                       Text(
-                                        eachActivityItemRecord.activity_start!,
+                                        "Start time: " +
+                                            eachActivityItemRecord
+                                                .activity_start!,
                                       )
                                     ],
                                   ),
                                   Column(
                                     children: [
                                       Text(
-                                        eachActivityItemRecord.activity_end!,
+                                        "End time: " +
+                                            eachActivityItemRecord
+                                                .activity_end!,
                                       )
                                     ],
                                   ),

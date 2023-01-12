@@ -7,6 +7,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 import '../users/userPreferences/current_user.dart';
 import 'package:Mychildcare/api_collection/api_connection.dart';
@@ -116,32 +117,35 @@ class HomeFragmentScreen extends StatelessWidget {
                                 children: [
                                   Column(
                                     children: [
-                                      ClipRRect(
-                                        clipBehavior: Clip.hardEdge,
-                                        borderRadius: BorderRadius.zero,
-                                        // borderRadius: const BorderRadius.only(
-                                        //   topRight: Radius.circular(20),
-                                        //   bottomRight: Radius.circular(20),
-                                        // ),
-                                        child: FadeInImage(
-                                          alignment: Alignment.center,
-                                          height: 250,
-                                          width: 300,
-                                          fit: BoxFit.fitWidth,
-                                          placeholder: const AssetImage(
-                                              "images/place_holder_1.png"),
-                                          image: NetworkImage(
-                                            eachActivityItemRecord
-                                                .activity_image!,
+                                      FittedBox(
+                                        fit: BoxFit.fill,
+                                        child: ClipRRect(
+                                          clipBehavior: Clip.hardEdge,
+                                          borderRadius: BorderRadius.zero,
+                                          // borderRadius: const BorderRadius.only(
+                                          //   topRight: Radius.circular(20),
+                                          //   bottomRight: Radius.circular(20),
+                                          // ),
+                                          child: FadeInImage(
+                                            alignment: Alignment.center,
+                                            height: 250,
+                                            width: 300,
+                                            fit: BoxFit.fitWidth,
+                                            placeholder: const AssetImage(
+                                                "images/place_holder_1.png"),
+                                            image: NetworkImage(
+                                              eachActivityItemRecord
+                                                  .activity_image!,
+                                            ),
+                                            imageErrorBuilder: (context, error,
+                                                stackTraceError) {
+                                              return const Center(
+                                                child: Icon(
+                                                  Icons.broken_image_outlined,
+                                                ),
+                                              );
+                                            },
                                           ),
-                                          imageErrorBuilder: (context, error,
-                                              stackTraceError) {
-                                            return const Center(
-                                              child: Icon(
-                                                Icons.broken_image_outlined,
-                                              ),
-                                            );
-                                          },
                                         ),
                                       ),
                                     ],
@@ -171,7 +175,11 @@ class HomeFragmentScreen extends StatelessWidget {
                                   Column(
                                     children: [
                                       Text(
-                                        eachActivityItemRecord.activity_date!,
+                                        DateFormat('yyyy-MM-dd').format(
+                                            DateTime.parse(
+                                                eachActivityItemRecord
+                                                    .activity_date!)),
+                                        // eachActivityItemRecord.activity_date!,
                                       )
                                     ],
                                   ),

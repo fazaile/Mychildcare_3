@@ -1,6 +1,7 @@
 import 'package:Mychildcare/admin/classroom/classroom_screen.dart';
 import 'package:Mychildcare/admin/teacher/menu_food_screen.dart';
 import 'package:Mychildcare/admin/teacher/teacher_acitivity_screen.dart';
+import 'package:Mychildcare/users/model/children.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,26 +17,26 @@ class TeacherClassroomSelection extends StatelessWidget {
         padding: const EdgeInsets.all(25),
         crossAxisCount: 2,
         children: <Widget>[
-          Card(
-            margin: const EdgeInsets.all(8),
-            child: InkWell(
-              onTap: () {},
-              splashColor: Colors.blue,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const <Widget>[
-                    Icon(
-                      Icons.child_care,
-                      size: 70,
-                      color: Colors.blueAccent,
-                    ),
-                    Text("Children", style: TextStyle(fontSize: 17.0)),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          // Card(
+          //   margin: const EdgeInsets.all(8),
+          //   child: InkWell(
+          //     onTap: () {},
+          //     splashColor: Colors.blue,
+          //     child: Center(
+          //       child: Column(
+          //         mainAxisSize: MainAxisSize.min,
+          //         children: const <Widget>[
+          //           Icon(
+          //             Icons.child_care,
+          //             size: 70,
+          //             color: Colors.blueAccent,
+          //           ),
+          //           Text("Children", style: TextStyle(fontSize: 17.0)),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Card(
             margin: const EdgeInsets.all(8),
             child: InkWell(

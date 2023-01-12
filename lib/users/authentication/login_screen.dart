@@ -279,20 +279,20 @@ class _LoginScreenState extends State<LoginScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text('Please click if'),
-                                TextButton(
-                                  onPressed: () {
-                                    Get.to(AdminLoginScreen());
-                                  },
-                                  child: const Text(
-                                    'Admin',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                Text('or'),
+                                Text('Please click here if you are'),
+                                // TextButton(
+                                //   onPressed: () {
+                                //     Get.to(AdminLoginScreen());
+                                //   },
+                                //   child: const Text(
+                                //     'Admin',
+                                //     style: TextStyle(
+                                //       color: Colors.black,
+                                //       fontSize: 16,
+                                //     ),
+                                //   ),
+                                // ),
+                                // Text('or'),
                                 TextButton(
                                     onPressed: () {
                                       Get.to(TeacherLoginScreen());

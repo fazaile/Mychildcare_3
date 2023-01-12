@@ -8,6 +8,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 import 'package:Mychildcare/api_collection/api_connection.dart';
 
@@ -172,7 +173,8 @@ class _MenuFoodAddScreenState extends State<MenuFoodAddScreen> {
                             firstDate: DateTime(1900),
                             lastDate: DateTime(2100));
 
-                        dateController.text = date!.toIso8601String();
+                        dateController.text =
+                            DateFormat('yyyy-MM-dd').format(date!);
                       },
                     ),
 
@@ -180,56 +182,57 @@ class _MenuFoodAddScreenState extends State<MenuFoodAddScreen> {
                       height: 18,
                     ),
                     TextFormField(
-                      controller: startController,
-                      validator: (val) =>
-                          val == "" ? "Please enter start time" : null,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          Icons.lock_clock_rounded,
-                          color: Colors.black,
-                        ),
-                        hintText: "Enter start time...",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide: const BorderSide(
-                            color: Colors.white60,
+                        controller: startController,
+                        validator: (val) =>
+                            val == "" ? "Please enter start time" : null,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(
+                            Icons.lock_clock_rounded,
+                            color: Colors.black,
                           ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide: const BorderSide(
-                            color: Colors.white60,
+                          hintText: "Enter start time...",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: const BorderSide(
+                              color: Colors.white60,
+                            ),
                           ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide: const BorderSide(
-                            color: Colors.white60,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: const BorderSide(
+                              color: Colors.white60,
+                            ),
                           ),
-                        ),
-                        disabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide: const BorderSide(
-                            color: Colors.white60,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: const BorderSide(
+                              color: Colors.white60,
+                            ),
                           ),
+                          disabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: const BorderSide(
+                              color: Colors.white60,
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 6,
+                          ),
+                          fillColor: Colors.white,
+                          filled: true,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 6,
-                        ),
-                        fillColor: Colors.white,
-                        filled: true,
-                      ),
-                      onTap: () async {
-                        TimeOfDay? timeOfDay = TimeOfDay(hour: 8, minute: 30);
-                        FocusScope.of(context).requestFocus(new FocusNode());
-                        timeOfDay = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.now(),
-                        );
-                        startController.text = timeOfDay!.toString();
-                      },
-                    ),
+                        onTap: () async {
+                          TimeOfDay? timeOfDay = TimeOfDay(hour: 8, minute: 30);
+                          FocusScope.of(context).requestFocus(new FocusNode());
+                          timeOfDay = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          print(timeOfDay);
+                          print(timeOfDay!.format(context));
+                          startController.text = timeOfDay.format(context);
+                        }),
 
                     const SizedBox(
                       height: 18,
@@ -282,7 +285,9 @@ class _MenuFoodAddScreenState extends State<MenuFoodAddScreen> {
                           context: context,
                           initialTime: TimeOfDay.now(),
                         );
-                        endController.text = timeOfDay!.toString();
+                        print(timeOfDay);
+                        print(timeOfDay!.format(context));
+                        endController.text = timeOfDay.format(context);
                       },
                     ),
 
@@ -300,7 +305,6 @@ class _MenuFoodAddScreenState extends State<MenuFoodAddScreen> {
                           startController.clear();
                           endController.clear();
                           MenuFoodScreen();
-                          Get.to(MenuFoodScreen());
                         });
                       },
                     ),
