@@ -83,7 +83,7 @@ class MenuFragmentScreen extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: Colors.lightBlue,
+                        color: Colors.lightBlue.shade300,
                         boxShadow: const [
                           BoxShadow(
                             offset: Offset(0, 0),

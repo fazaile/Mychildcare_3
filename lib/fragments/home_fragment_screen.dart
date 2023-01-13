@@ -96,7 +96,7 @@ class HomeFragmentScreen extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: Colors.lightBlue,
+                        color: Colors.lightBlue.shade300,
                         boxShadow: const [
                           BoxShadow(
                             offset: Offset(0, 0),
@@ -126,25 +126,28 @@ class HomeFragmentScreen extends StatelessWidget {
                                           //   topRight: Radius.circular(20),
                                           //   bottomRight: Radius.circular(20),
                                           // ),
-                                          child: FadeInImage(
+                                          child: FittedBox(
+                                            fit: BoxFit.fill,
                                             alignment: Alignment.center,
-                                            height: 250,
-                                            width: 300,
-                                            fit: BoxFit.fitWidth,
-                                            placeholder: const AssetImage(
-                                                "images/place_holder_1.png"),
-                                            image: NetworkImage(
-                                              eachActivityItemRecord
-                                                  .activity_image!,
+                                            child: FadeInImage(
+                                              // alignment: Alignment.center,
+                                              height: 250,
+                                              width: 300,
+                                              placeholder: const AssetImage(
+                                                  "images/place_holder_1.png"),
+                                              image: NetworkImage(
+                                                eachActivityItemRecord
+                                                    .activity_image!,
+                                              ),
+                                              imageErrorBuilder: (context,
+                                                  error, stackTraceError) {
+                                                return const Center(
+                                                  child: Icon(
+                                                    Icons.broken_image_outlined,
+                                                  ),
+                                                );
+                                              },
                                             ),
-                                            imageErrorBuilder: (context, error,
-                                                stackTraceError) {
-                                              return const Center(
-                                                child: Icon(
-                                                  Icons.broken_image_outlined,
-                                                ),
-                                              );
-                                            },
                                           ),
                                         ),
                                       ),

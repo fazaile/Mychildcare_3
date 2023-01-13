@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../users/userPreferences/current_user.dart';
 import '../fragments/home_fragment_screen.dart';
 import '../fragments/profile_fragment_screen.dart';
-import 'stripe_fragment_screen.dart';
+import 'payment_screen.dart';
 import '../fragments/menu_food_fragment_screen.dart';
 
 class DashBoardOfFragment extends StatelessWidget {
@@ -14,7 +14,7 @@ class DashBoardOfFragment extends StatelessWidget {
   List<Widget> _fragmentScreens = [
     HomeFragmentScreen(),
     MenuFragmentScreen(),
-    // PaySampleApp(),
+    PaymentScreen(),
     ProfileFragmentScreen(),
   ];
 
@@ -30,9 +30,9 @@ class DashBoardOfFragment extends StatelessWidget {
       'label': 'Food'
     },
     {
-      'active_icon': FontAwesomeIcons.children,
-      'non_active_icon': FontAwesomeIcons.children,
-      'label': 'Children'
+      'active_icon': FontAwesomeIcons.moneyBill,
+      'non_active_icon': FontAwesomeIcons.moneyBillTransfer,
+      'label': 'Fee'
     },
     {
       'active_icon': Icons.person,
